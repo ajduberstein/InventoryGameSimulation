@@ -15,51 +15,41 @@ public class InventorySystem{
   final int COST_STORAGE = 1;
   final int COST_BACKORDERED = 10;
   //Time periods
-  //TODO Reset NUM_DAYS = 1000
-  final int NUM_DAYS = 10 /*00*/;
+  final int NUM_DAYS = 1000;
   final int REVIEW_PERIOD = 5;
   final int MAX_INVENTORY = 11;
-  final int SIMULATION_RUNS = 10;
-  for(int run = 0; run < SIMULATION_RUNS; run++){
+  //TODO Reset SIMULATION_RUNS to 10
+  final int SIMULATION_RUNS = 1;
+  for(int run = 1; run <= SIMULATION_RUNS; run++){
    int inventory = BEGINNING_INVENTORY;
    int randomNum;
-   int currLead = -1;
-   int shipment = 0;
+   int currLead = 3;
+   int shipment = REPLENISHMENT;
    int shortage = 0;
    int dayEndInventory = BEGINNING_INVENTORY;
    int costs = 0;
    for(int day = 1; day <= NUM_DAYS; day++){
-     //TODO turn-off
-     System.out.println("*** DAY " + day + " ***");
-     System.out.println("CURRENT LEAD: " + currLead); 
-    //Arrival of shipment in currLead days
-    if (currLead > 0){
+     if (currLead > 0){
      currLead--;
     }
-    //One-shot replenishment at beginning of simulation
-    if (day == 3){
-     inventory += REPLENISHMENT;   
+     
+    if(currLead == 0){
+     inventory = (inventory > 0 ? inventory : 0) + shipment;
+     shipment = 0;
+     currLead = -1;
     }
-    System.out.println("BEGINNING INVENTORY: " + inventory);
+    
     //Demand
     randomNum = (int) Math.round(rand.nextDouble()*100);
     inventory -= InventorySystem.getDailyDemand(
-      randomNum); 
-    System.out.println("ENDING INVENTORY: " + inventory); 
+      randomNum);  
     
     //KPIs
     shortage += (inventory < 0 ? inventory : 0);
     dayEndInventory += (inventory > 0 ? inventory : 0);
     costs += (shortage*COST_BACKORDERED > 0 ? shortage*COST_BACKORDERED : 0);
     costs += (dayEndInventory*COST_STORAGE > 0 ? dayEndInventory*COST_STORAGE : 0);
-    if(currLead == 0){
-     inventory = (inventory > 0 ? inventory : 0) + shipment;
-     shipment = 0;
-     currLead = -1;
-    }
-    //TODO Remove println's
-     System.out.println("SHORTAGE " + shortage + " DayEndInventory " + dayEndInventory + " costs " + costs);
-     System.out.println("SHIPMENTS " + shipment);
+    
     //Review period
     if(day % REVIEW_PERIOD == 0){
      //Lead-time distribution
