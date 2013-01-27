@@ -5,10 +5,12 @@
  */
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class InventorySystem{
  public static void main(String[] args){
   Random rand = new Random(189);
+  Scanner s = new Scanner(System.in);
   //Initial conditions
   final int BEGINNING_INVENTORY = 3;
   final int REPLENISHMENT = 8; 
@@ -17,9 +19,9 @@ public class InventorySystem{
   //Time periods
   final int NUM_DAYS = 1000;
   final int REVIEW_PERIOD = 5;
-  final int MAX_INVENTORY = 11;
-  //TODO Reset SIMULATION_RUNS to 10
-  final int SIMULATION_RUNS = 1;
+  System.out.print("Please set the max inventory value: ");
+  final int MAX_INVENTORY = s.nextInt();
+  final int SIMULATION_RUNS = 10;
   for(int run = 1; run <= SIMULATION_RUNS; run++){
    int inventory = BEGINNING_INVENTORY;
    int randomNum;
